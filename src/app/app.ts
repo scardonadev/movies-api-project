@@ -1,12 +1,13 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
+  selector: 'App',
   imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  template: `
+    <div class="bg-[#111] text-white min-h-svh">
+      <router-outlet></router-outlet>
+    </div>
+  `,
 })
-export class App {
-  protected readonly title = signal('frontend_transferencia');
-}
+export class App {}
