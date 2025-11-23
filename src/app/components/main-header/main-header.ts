@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { LucideAngularModule, SearchIcon } from 'lucide-angular';
 import { Search } from 'lucide-angular/src/icons';
 import { RouterLink } from '@angular/router';
@@ -7,7 +7,11 @@ import { RouterLink } from '@angular/router';
   selector: 'MainHeader',
   imports: [LucideAngularModule, RouterLink],
   template: `
-    <header class="flex justify-between p-4 md:p-8 z-10">
+    <header
+      class="flex w-full justify-between p-4 md:p-8 z-10 {{
+        fixed ? 'absolute top-0 left-0 z-99' : ''
+      }}"
+    >
       <a routerLink="/" class="flex items-center flex-1 text-3xl font-black no-underline">
         <span class="text-red-600">.</span>Movi<span class="-rotate-30 inline-block">e</span>
       </a>
@@ -41,4 +45,5 @@ import { RouterLink } from '@angular/router';
 })
 export class MainHeader {
   readonly SearchIcon = Search;
+  @Input() fixed: boolean = false;
 }

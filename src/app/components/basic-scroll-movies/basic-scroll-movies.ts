@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { TypeMovie } from '../../../utils/utils';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'BasicScrollMovies',
-  imports: [],
+  imports: [RouterLink],
   template: `
     <section id="mostViewedMovies" class="flex justify-center mb-8">
       <div id="mostViewedMoviesWrapper" class="flex flex-col w-full max-w-7xl gap-4 px-4">
@@ -12,7 +13,12 @@ import { TypeMovie } from '../../../utils/utils';
           <div class="w-fit max-w-fit h-full whitespace-nowrap min-w-full pb-2 ">
             @for (movie of movies; track $index) {
             <a
-              class="not-first:ml-2 md:not-first:ml-4 group inline-flex relative h-auto w-[calc(33%-1.5rem)] md:w-[calc(16%-1.5rem)] rounded-lg aspect-2/3 overflow-hidden shadow-[0_0_1.5rem_-0.85rem_rgba(0,0,0,0.8)] select-none cursor-pointer transition-all duration-300 hover:scale-95"
+              routerLink="/movie/{{ movie.id }}"
+              class="not-first:ml-2 md:not-first:ml-4 group inline-flex relative h-auto {{
+                type === 'sm'
+                  ? 'w-[calc(33%-1.5rem)] md:w-[calc(16%-1.5rem)]'
+                  : 'w-[calc(50%-1.5rem)] md:w-[calc(24%-1.5rem)]'
+              }} rounded-lg aspect-2/3 overflow-hidden shadow-[0_0_1.5rem_-0.85rem_rgba(0,0,0,0.8)] select-none cursor-pointer transition-all duration-300 hover:scale-95"
             >
               <img
                 src="{{ 'https://image.tmdb.org/t/p/w500' + movie.poster_path }}"
@@ -42,6 +48,7 @@ export class BasicScrollMovies {
   @Input() movies: TypeMovie[] = [];
   @Input() genres: any[] = [];
   @Input() title: string = '';
+  @Input() type: 'sm' | 'md' = 'sm';
 
   getGenresNames(movie: TypeMovie): string {
     if (!movie) {

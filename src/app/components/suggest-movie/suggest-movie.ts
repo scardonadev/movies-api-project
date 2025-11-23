@@ -1,19 +1,23 @@
 import { Component, Input } from '@angular/core';
 import { LucideAngularModule, Star } from 'lucide-angular';
 import { TypeGenre, TypeMovie } from '../../../utils/utils';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'SuggestMovie',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, RouterLink],
   template: `
     <section class="flex justify-center mb-8">
-      <div class="w-full max-w-7xl aspect-4/5 md:aspect-video px-4">
+      <div
+        routerLink="/movie/{{ movie.id }}"
+        class="w-full max-w-7xl aspect-4/5 md:aspect-video px-4"
+      >
         <div
           class="w-full h-full relative rounded-2xl overflow-hidden shadow-[0_0_1.5rem_-0.85rem_rgba(0,0,0,0.8)] select-none cursor-pointer"
         >
           <img
-            src="{{ 'https://image.tmdb.org/t/p/w1920' + movie?.backdrop_path }}"
-            alt="{{ movie?.original_title }}"
+            src="{{ 'https://image.tmdb.org/t/p/w1920' + movie.backdrop_path }}"
+            alt="{{ movie.original_title }}"
             class="w-full h-full object-cover object-center"
           />
           <div
@@ -21,18 +25,18 @@ import { TypeGenre, TypeMovie } from '../../../utils/utils';
           >
             <div class="w-full md:max-w-1/2">
               <h4 class="flex flex-wrap font-extralight text-[10px] min-h-[1em]">
-                @if (movie?.adult) {
+                @if (movie.adult) {
                 <span class="bg-white/25 rounded px-1 mr-2">+18</span>
                 }
                 <i-lucide [img]="StarIcon" class="size-[1em] text-orange-400 mr-1">4.5</i-lucide>
                 <span> {{ getGenresNames() }} </span>
               </h4>
-              <h3 data-skeleton="true" class="font-semibold mb-2">{{ movie?.title }}</h3>
+              <h3 data-skeleton="true" class="font-semibold mb-2">{{ movie.title }}</h3>
               <p
                 data-skeleton="true"
                 class="text-xs overflow-hidden line-clamp-3 md:line-clamp-none"
               >
-                {{ movie?.overview }}
+                {{ movie.overview }}
               </p>
             </div>
           </div>
@@ -42,7 +46,7 @@ import { TypeGenre, TypeMovie } from '../../../utils/utils';
   `,
 })
 export class SuggestMovie {
-  @Input() movie: TypeMovie | null = null;
+  @Input() movie: TypeMovie = {} as TypeMovie;
   @Input() genres: TypeGenre[] = [];
 
   readonly StarIcon = Star;
