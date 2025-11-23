@@ -5,7 +5,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
   selector: 'App',
   imports: [RouterOutlet],
   template: `
-    <div class="bg-[#111] text-white min-h-svh">
+    <div class="bg-[#111] text-white pb-16 min-h-svh">
       <router-outlet></router-outlet>
     </div>
   `,

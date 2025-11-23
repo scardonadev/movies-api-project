@@ -1,7 +1,14 @@
 import { Component, signal } from '@angular/core';
 import { MainHeader } from '../../components/main-header/main-header';
 import { SuggestMovie } from '../../components/suggest-movie/suggest-movie';
-import { getGenres, getPopularMovies, TypeGenre, TypeMovie } from '../../../utils/utils';
+import {
+  getGenres,
+  getMoviesByGenre,
+  getPopularMovies,
+  getUpcomingMovies,
+  TypeGenre,
+  TypeMovie,
+} from '../../../utils/utils';
 import { BasicScrollMovies } from '../../components/basic-scroll-movies/basic-scroll-movies';
 
 @Component({
@@ -11,20 +18,54 @@ import { BasicScrollMovies } from '../../components/basic-scroll-movies/basic-sc
     <div>
       <MainHeader />
       <main>
-        <SuggestMovie [movie]="suggestedMovie()" [genres]="genres()" />
-        <BasicScrollMovies [movies]="mostViewedMovies()" [genres]="genres()" title="Lo más visto" />
-        <BasicScrollMovies [movies]="popularMovies()" title="Películas populares" />
+        <SuggestMovie [movie]="suggestedMovie()" [genres]="genres()" fixed="true" />
+        <BasicScrollMovies
+          type="sm"
+          [movies]="mostViewedMovies()"
+          [genres]="genres()"
+          title="Lo más visto"
+        />
+        <BasicScrollMovies
+          type="sm"
+          [movies]="popularMovies()"
+          [genres]="genres()"
+          title="Películas populares"
+        />
+        <BasicScrollMovies
+          type="md"
+          [movies]="upcomingMovies()"
+          [genres]="genres()"
+          title="Próximos estrenos"
+        />
+        <BasicScrollMovies
+          type="sm"
+          [movies]="animatedMovies()"
+          [genres]="genres()"
+          title="Películas animadas"
+        />
+        <BasicScrollMovies
+          type="sm"
+          [movies]="actionMovies()"
+          [genres]="genres()"
+          title="Películas de guerra"
+        />
       </main>
     </div>
   `,
 })
 export class PageHome {
-  readonly suggestedMovie = signal<TypeMovie | null>(null);
+  readonly genres = signal<TypeGenre[]>([]);
+  readonly suggestedMovie = signal<TypeMovie>({} as TypeMovie);
   readonly mostViewedMovies = signal<TypeMovie[]>([]);
   readonly popularMovies = signal<TypeMovie[]>([]);
-  readonly genres = signal<TypeGenre[]>([]);
+  readonly upcomingMovies = signal<TypeMovie[]>([]);
+  readonly animatedMovies = signal<TypeMovie[]>([]);
+  readonly actionMovies = signal<TypeMovie[]>([]);
 
   async ngOnInit() {
+    //Obtener géneros de películas
+    this.genres.set(await getGenres());
+
     //Devolver todas las películas populares
     const popularMovies = await getPopularMovies();
 
@@ -38,7 +79,13 @@ export class PageHome {
     this.mostViewedMovies.set(popularMovies.slice(0, halfIndex));
     this.popularMovies.set(popularMovies.slice(halfIndex));
 
-    //Obtener géneros de películas
-    this.genres.set(await getGenres());
+    //Obtener próximos estrenos
+    const upcomingMovies = await getUpcomingMovies();
+    this.upcomingMovies.set(upcomingMovies);
+
+    //Obtener películas de animación
+    this.animatedMovies.set(await getMoviesByGenre('animación', this.genres()));
+    //Obtener películas de acción
+    this.actionMovies.set(await getMoviesByGenre('bélica', this.genres()));
   }
 }
